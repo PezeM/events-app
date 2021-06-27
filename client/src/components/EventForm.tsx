@@ -19,7 +19,7 @@ export const EventForm = () => {
   });
   const toast = useToast();
 
-  const onSubmit: SubmitHandler<EventFormInputs> = async (values) => {
+  const onSubmit: SubmitHandler<EventFormInputs> = async (values, e) => {
     try {
       values = { ...values, eventDate: new Date(values.eventDate).getTime() };
       const response = await postFetch("event", values);
@@ -29,9 +29,7 @@ export const EventForm = () => {
         const error = data ? data.message : response.status;
         toast({
           title: "Error",
-          description: `Error adding new event: ${
-            error.type ? error.type : error
-          }`,
+          description: `Error adding new event: ${error}`,
           status: "error",
         });
         return;
@@ -44,6 +42,7 @@ export const EventForm = () => {
       });
 
       reset();
+      e?.target.reset();
     } catch (error) {
       toast({
         title: "Error",
