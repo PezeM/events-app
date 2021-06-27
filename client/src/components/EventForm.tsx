@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Button, FormControl, FormLabel } from "@chakra-ui/react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FormError } from "./FormError";
-import DatePicker from "./DatePicker";
+import { Box, Button, useToast } from "@chakra-ui/react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { EventFormInputs } from "../interfaces/eventFormInputs.interface";
 import { InputField } from "./InputField";
+import { DatePickerField } from "./DatePickerField";
+import { postFetch } from "../constants/api";
 
 export const EventForm = () => {
   const {
@@ -17,10 +17,40 @@ export const EventForm = () => {
     mode: "onTouched",
     reValidateMode: "onChange",
   });
+  const toast = useToast();
 
-  const onSubmit: SubmitHandler<EventFormInputs> = (values) => {
-    console.log("onSubmit", values);
-    reset();
+  const onSubmit: SubmitHandler<EventFormInputs> = async (values) => {
+    try {
+      values = { ...values, eventDate: new Date(values.eventDate).getTime() };
+      const response = await postFetch("event", values);
+      const data = await response.json();
+
+      if (!response.ok) {
+        const error = data ? data.message : response.status;
+        toast({
+          title: "Error",
+          description: `Error adding new event: ${
+            error.type ? error.type : error
+          }`,
+          status: "error",
+        });
+        return;
+      }
+
+      toast({
+        title: "Event created",
+        description: "Event has been successfully created!",
+        status: "success",
+      });
+
+      reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Error adding new event: ${error}`,
+        status: "error",
+      });
+    }
   };
 
   const isFieldValid = (fieldName: string) => {
@@ -82,28 +112,17 @@ export const EventForm = () => {
         pt={4}
       />
 
-      <FormControl isInvalid={errors.eventDate} pt={4}>
-        <FormLabel htmlFor="eventDate">Event date</FormLabel>
-        <Controller
-          name="eventDate"
-          control={control}
-          render={({ field }) => (
-            <DatePicker
-              placeholderText="Click to select date"
-              onChange={(date: Date) => field.onChange(date)}
-              selected={field.value}
-              id="eventDate"
-              minDate={new Date()}
-              dateFormat={"d MMM yyyy"}
-              shouldCloseOnSelect={true}
-            />
-          )}
-          rules={{
-            required: "This field is required",
-          }}
-        />
-        <FormError error={errors.eventDate} />
-      </FormControl>
+      <DatePickerField
+        name={"eventDate"}
+        label={"Event date"}
+        placeholder={"Click to select date"}
+        control={control}
+        error={errors.eventDate}
+        validationOptions={{
+          required: "This field is required",
+        }}
+        pt={4}
+      />
 
       <Button
         width="full"
