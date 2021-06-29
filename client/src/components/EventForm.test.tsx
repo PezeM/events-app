@@ -4,13 +4,8 @@ import { EventForm } from "./EventForm";
 import { act, fireEvent, screen } from "@testing-library/react";
 
 describe("EventForm", () => {
-  let appContainer: HTMLElement;
-
   beforeEach(async () => {
-    await act(async () => {
-      let { container } = render(<EventForm />);
-      appContainer = container;
-    });
+    render(<EventForm />);
   });
 
   it("renders without crashing", () => {});
@@ -95,5 +90,45 @@ describe("EventForm", () => {
     expect(
       await screen.findByText("Maximum length should be 30")
     ).toBeVisible();
+  });
+
+  it("should not display error when values are correct", async () => {
+    const fields = [
+      {
+        labelText: "First name",
+        value: "Adam",
+      },
+      {
+        labelText: "Last name",
+        value: "DVVAS",
+      },
+      {
+        labelText: "Email",
+        value: "email@gmail.com",
+      },
+      {
+        labelText: "Event date",
+        placeholderText: "Click to select date",
+        value: `${new Date()}`,
+      },
+    ];
+
+    for (const field of fields) {
+      const element = field.placeholderText
+        ? screen.getByPlaceholderText(field.placeholderText)
+        : screen.getByLabelText(field.labelText);
+
+      fireEvent.input(element, {
+        target: {
+          value: field.value,
+        },
+      });
+    }
+
+    await act(async () => {
+      await fireEvent.submit(screen.getByRole("button"));
+    });
+
+    expect(screen.queryAllByRole("form-error-message")).toHaveLength(0);
   });
 });
