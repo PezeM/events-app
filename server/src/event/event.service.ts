@@ -24,7 +24,6 @@ export class EventService {
 
   async remove(id: string): Promise<boolean> {
     const result = await this.eventModel.deleteOne({ _id: id });
-    console.log(result);
     return result.deletedCount > 0;
   }
 }

@@ -73,7 +73,7 @@ describe('EventController', () => {
       expect(service.findOne).toBeCalled();
     });
 
-    it('should throw error on if event not found', () => {
+    it('should throw an error on if event not found', () => {
       service.findOne = jest.fn().mockReturnValueOnce(undefined);
 
       expect(controller.findOne('dbbbg')).rejects.toThrow(NotFoundException);
@@ -98,12 +98,12 @@ describe('EventController', () => {
   });
 
   describe('/DELETE/:id', () => {
-    it('should return true event by id', () => {
+    it('should return true if event was deleted by id', () => {
       expect(controller.remove('321')).resolves.toEqual(true);
       expect(service.remove).toBeCalled();
     });
 
-    it('should throw error on if event not found', () => {
+    it('should throw an error if event was not found', () => {
       service.remove = jest.fn().mockReturnValueOnce(false);
 
       expect(controller.remove('dbbbg')).rejects.toThrow(NotFoundException);
