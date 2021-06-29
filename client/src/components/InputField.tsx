@@ -1,4 +1,4 @@
-import { FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
+import { FieldValues, RegisterOptions, UseFormRegister } from "react-hook-form";
 import {
   FormControl,
   FormLabel,
@@ -15,7 +15,7 @@ interface Props {
   label: string;
   placeholder?: string;
   type: string;
-  error: {
+  error?: {
     message?: string;
   };
   validationOptions: RegisterOptions;
@@ -49,7 +49,11 @@ export const InputField = ({
           {...register(name, validationOptions)}
         />
         {isFieldValid && (
-          <InputRightElement children={<CheckIcon color="green.400" />} />
+          <InputRightElement
+            children={
+              <CheckIcon data-testid={"check-icon"} color="green.400" />
+            }
+          />
         )}
       </InputGroup>
       <FormError error={error} />

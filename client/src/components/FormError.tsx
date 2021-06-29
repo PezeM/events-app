@@ -3,7 +3,7 @@ import { FormErrorMessage } from "@chakra-ui/react";
 import { WarningIcon } from "@chakra-ui/icons";
 
 interface Props {
-  error: {
+  error?: {
     message?: string;
   };
 }
