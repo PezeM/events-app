@@ -63,6 +63,7 @@ export const EventForm = () => {
       mb={2}
       textAlign="left"
       as="form"
+      id="event-form"
       onSubmit={handleSubmit(onSubmit)}
     >
       <InputField

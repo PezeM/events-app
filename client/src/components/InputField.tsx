@@ -1,5 +1,4 @@
-import { RegisterOptions, UseFormRegister } from "react-hook-form";
-import { EventFormInputs } from "../interfaces/eventFormInputs.interface";
+import { FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
 import {
   FormControl,
   FormLabel,
@@ -20,7 +19,7 @@ interface Props {
     message?: string;
   };
   validationOptions: RegisterOptions;
-  register: UseFormRegister<EventFormInputs>;
+  register: UseFormRegister<FieldValues>;
   isFieldValid?: boolean;
 
   [prop: string]: any;

@@ -12,7 +12,7 @@ export const FormError = ({ error }: Props) => {
   if (!error || !error.message) return null;
 
   return (
-    <FormErrorMessage>
+    <FormErrorMessage role={"form-error-message"}>
       <WarningIcon mr={1} /> {error.message}
     </FormErrorMessage>
   );
